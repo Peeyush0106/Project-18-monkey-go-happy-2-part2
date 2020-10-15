@@ -60,7 +60,7 @@ function draw() {
     monkeyAutomatedCollider.y = monkey.y;
 
 
-    // stones.collide(ground);
+    stones.collide(ground);
     bananas.collide(ground);
     monkey.velocityY += 0.8;
     if (forest.x < -15) {
@@ -286,6 +286,7 @@ function setPropertiesOfObjects() {
 function doSetup() {
     ground = createSprite(200, 200, 400, 50);
     ground.y = (400 - (ground.height / 2));
+    ground.visible = false;
 
     forestImage.width = 800;
     forestImage.height = 400;
@@ -348,7 +349,7 @@ function spawnBananas() {
         var bananaY = random(190, 290);
         var banana = createSprite(450, bananaY);
         banana.addImage("banana", bananaImage);
-        banana.scale = 0.1;
+        banana.scale = 0.05;
         bananas.add(banana);
         banana.velocityY += 0.5;
         monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
