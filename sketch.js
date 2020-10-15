@@ -39,16 +39,14 @@ function draw() {
   monkeyAutomatedCollider.x = monkey.x
     + monkeyAutomatedColliderMonkeyXAddNumber;
   monkeyAutomatedCollider.y = monkey.y;
-  // if (ground.velocityX <= 0 && ground.velocityX > -23) {
-  //   ground.velocityX = -1 * ((3 + 2 * time / 50));
-  // }
-  console.log("---------------- Monkey's Y Axis ----------------"+monkey.y);
-
-  // console.log("---------------- Stones ----------------"+stones);
-  // console.log("---------------- Stones length ----------------"+ stones.length);
-  // console.log("---------------- Ground ----------------"+ground);
-  // console.log("---------------- Bananas ----------------"+bananas);
-  // console.log("---------------- Bananas length ----------------"+bananas.length);
+  if (ground.velocityX <= 0 && ground.velocityX > -23) {
+    ground.velocityX = -1 * ((3 + 2 * time / 50));
+  }
+  console.log("---------------- Stones ----------------" + stones);
+  console.log("---------------- Stones length ----------------" + stones.length);
+  console.log("---------------- Ground ----------------" + ground);
+  console.log("---------------- Bananas ----------------" + bananas);
+  console.log("---------------- Bananas length ----------------" + bananas.length);
 
   // stones.collide(ground);
   bananas.collide(ground);
@@ -128,10 +126,9 @@ function controlGameWithGameStates() {
     spawnBananas();
     forest.setVelocity(-1 * ((3 + 2 * time / 50)), 0);
 
-    // if (forest.velocityX != 0) {     
-      // monkey.addAnimation("monkey", monkeyImage);
-      // monkey.addImage("monkey_jump", monkeyJumpImage);
-    // }
+    if (forest.velocityX === 0) {
+      monkey.addAnimation("monkey", monkeyImage);
+    }
     if (keyDown("space") || keyDown("up")) {
       if (monkey.y > 320) {
         monkey.velocityY -= 11.3;
@@ -142,14 +139,13 @@ function controlGameWithGameStates() {
     }
 
     if (stones.length > 0 && monkey.isTouching(stones)) {
-    //if (stones.length > 0) {
-     // if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
-        gameState = END;
-     // }
+      //if (stones.length > 0) {
+      // if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
+      gameState = END;
+      // }
     }
 
-    if (monkey.y < 317/* || forest.velocityX === 0*/) {
-      // monkey.changeAnimation("monkey_jump", monkeyJumpImage);
+    if (monkey.y < 320 || forest.velocityX === 0) {
       monkey.addImage("monkey_jump", monkeyJumpImage);
       monkeyHand.visible = true;
       monkeyHand.rotationSpeed = 16;
@@ -167,8 +163,8 @@ function controlGameWithGameStates() {
 
     if (bananas.length > 0) {
       if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
-      //if ((((bananas.get(0).x) - monkey.x) < (monkey.width + bananas.width) / 2) 
-      //|| (((bananas.get(0).x) - monkeyHand.x) < (monkeyHand.width + bananas.width) / 2)) {
+        //if ((((bananas.get(0).x) - monkey.x) < (monkey.width + bananas.width) / 2) 
+        //|| (((bananas.get(0).x) - monkeyHand.x) < (monkeyHand.width + bananas.width) / 2)) {
         bananas.destroyEach();
         score += 5;
       }
@@ -194,18 +190,18 @@ function controlGameWithGameStates() {
     if (forest.velocityX === 0) {
       monkey.changeAnimation("monkey_jump", monkeyJumpImage);
     }
-    if (monkey.y < 317) {
+    if (monkey.y < 320) {
       monkey.changeAnimation("monkey", monkeyImage);
     }
     if (stones.length > 0 && monkey.isTouching(stones)) {
-    //if (stones.length > 0 && ((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
+      //if (stones.length > 0 && ((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
       gameState = END;
     }
 
     if (bananas.length > 0) {
       if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
-      //if ((((bananas.get(0).x) - monkey.x) < (monkey.width + bananas.width) / 2) 
-      //|| (((bananas.get(0).x) - monkeyHand.x) < (monkeyHand.width + bananas.width) / 2)) {
+        //if ((((bananas.get(0).x) - monkey.x) < (monkey.width + bananas.width) / 2) 
+        //|| (((bananas.get(0).x) - monkeyHand.x) < (monkeyHand.width + bananas.width) / 2)) {
         bananas.destroyEach();
         score += 5;
       }
@@ -219,7 +215,7 @@ function controlGameWithGameStates() {
       monkey.velocityY = -11.3;
     }
 
-    if (monkey.y < 317 || forest.velocityX === 0) {
+    if (monkey.y < 320 || forest.velocityX === 0) {
       monkey.changeAnimation("monkey_jump", monkeyJumpImage);
       monkeyHand.visible = true;
       monkeyHand.rotationSpeed = 16;
@@ -310,9 +306,6 @@ function doSetup() {
 
   monkey = createSprite(100, 180);
   monkey.scale = 0.1;
-  monkey.addAnimation("monkey", monkeyImage);
-  // monkey.addImage("monkey_jump", monkeyJumpImage);
-
 
   monkeyAutomatedCollider = createSprite(0, 0, 65, 305);
   monkeyAutomatedCollider.visible = false;
@@ -341,19 +334,8 @@ function spawnBananas() {
   if (World.frameCount % 110 === 0) {
     //Spawn the bananas when the condition is true
     bananas.destroyEach();
+    s.destroyEach();
     bananas.clear();
-    var bananaY = random(190, 290);
-    var banana = createSprite(450, bananaY);
-    banana.addImage("banana", bananaImage);
-    banana.scale = 0.1;
-    bananas.add(banana);
-    banana.velocityY += 0.5;
-    monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
-  }
-}
-
-function spawnStones() {
-  if (World.frameCount % 180 === 0) {
     //Spawn the stones when the condition is true
     var stone = createSprite(500, 200);
     stone.addImage("stone", stoneImage);
@@ -362,6 +344,6 @@ function spawnStones() {
     stone.rotationSpeed = forest.velocityX * 5 / 3;
     stone.velocityY += 10;
     stones.add(stone);
-    monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
+    o//nkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
   }
 }
