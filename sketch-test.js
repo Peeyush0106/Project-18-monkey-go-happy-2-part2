@@ -28,7 +28,8 @@ function setup() {
 function draw() {
     fill("red");
     textStyle(BOLD);
-    background(255, 255, 255);
+    background("lightgreen");
+    drawSprites();
 }
 
 function doSetup() {

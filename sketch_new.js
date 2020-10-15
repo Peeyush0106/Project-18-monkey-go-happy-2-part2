@@ -43,11 +43,14 @@ function draw() {
         console.log("----------Stones Velocity------------" + stones.get(0).velocityX);
     }
 
-    fill("red");
-    textStyle(BOLD);
-    background(255, 255, 255);
-    stones.setVelocityEach(- 1 * (ground.velocityX * 5) / 8, 0);
-    bananas.setVelocityEach(- 1 * (ground.velocityX * 5) / 8, 0);
+    var velocityX = (forest.velocityX * 5) / 8;
+    console.log("VelocityX -- "+velocityX)
+    if(stones.length > 0) {        
+        stones.get(0).velocityX = velocityX;
+    }
+    if(bananas.length > 0) {
+        bananas.get(0).velocityX = velocityX;
+    }
     monkeyHand.setCollider("rectangle", 0, 0, 20, 25, monkeyHand.rotation);
     monkey.collide(ground);
     monkeyHand.x = monkey.x + 10;
@@ -256,8 +259,10 @@ function controlGameWithGameStates() {
 
 function setPropertiesOfObjects() {
     // Set the properties of the objects
-    stones.setVelocityEach((forest.velocityX * 5) / 8), 0;
-    bananas.setVelocityEach((forest.velocityX * 5) / 8, 0);
+    // stones.setVelocityEach((forest.velocityX * 5) / 8), 0;
+    // bananas.setVelocityEach((forest.velocityX * 5) / 8, 0);
+    // stones.setVelocityEach(- 1 * (ground.velocityX * 5) / 8, 0);
+    // bananas.setVelocityEach(- 1 * (ground.velocityX * 5) / 8, 0);
     monkeyHand.setCollider("rectangle", 0, 0, 20, 25, monkeyHand.rotation);
     monkey.collide(ground);
     monkeyHand.x = monkey.x + 10;
@@ -302,8 +307,6 @@ function doSetup() {
     monkey.scale = 0.1;
     monkey.addAnimation("monkey", monkeyImage);
 
-
-
     monkeyAutomatedCollider = createSprite(0, 0, 65, 305);
     monkeyAutomatedCollider.visible = false;
 
@@ -339,6 +342,7 @@ function doSetup() {
 function spawnBananas() {
     if (World.frameCount % 110 === 0) {
         //Spawn the bananas when the condition is true
+        console.log("Creating New Banana");
         bananas.destroyEach();
         bananas.clear();
         var bananaY = random(190, 290);
@@ -355,6 +359,7 @@ function spawnBananas() {
 function spawnStones() {
     if (World.frameCount % 180 === 0) {
         //Spawn the stones when the condition is true
+        console.log("Creating New Stone");
         stones.destroyEach();
         stones.clear();
         var stone = createSprite(500, 200);
