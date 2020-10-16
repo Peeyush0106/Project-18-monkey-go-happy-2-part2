@@ -15,7 +15,7 @@ function preload() {
     automatedPlayerButtonImage = loadImage("automated_gaming_mode.png");
     bananaImage = loadImage("banana.png");
     stoneImage = loadImage("stone.png");
-    monkeyJumpingImage = loadImage("monkey-jumping.png");
+    monkeyJumpingImage = loadImage("monkey-jumping_image.png");
     forestImage = loadImage("jungle.jpg");
 }
 
