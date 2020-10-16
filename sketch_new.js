@@ -59,13 +59,19 @@ function draw() {
         + monkeyAutomatedColliderMonkeyXAddNumber;
     monkeyAutomatedCollider.y = monkey.y;
 
+    if (timesCanStoneTouch <= 0) {
+        gameState = END;
+    }
 
     stones.collide(ground);
     bananas.collide(ground);
     monkey.velocityY += 0.8;
+
     if (forest.x < -15) {
         forest.x = 400;
     }
+
+    monkeyHand.scale = monkey.scale;
 
     // Draw the sprites
     drawSprites();
@@ -97,6 +103,8 @@ function controlGameWithGameStates() {
 
         //Set some properties for the objects when game is not started
         monkey.visible = false;
+        monkey.scale = 0.075;
+        timesCanStoneTouch = 2;
         monkeyHand.visible = false;
         singlePlayerButton.visible = true;
         automatedPlayingButton.visible = true;
@@ -120,6 +128,9 @@ function controlGameWithGameStates() {
         // fill("black");
         text("Survival Time: " + time, 100, 50);
         text("Score: " + score, 100, 120);
+        text("Times you can touch the stones: " + timesCanStoneTouch, 10, 85);
+        text("MouseX " + mouseX, 250, 170);
+        text("MouseY " + mouseY, 250, 230);
     }
 
     //When the player wants to control the game himself
@@ -147,7 +158,9 @@ function controlGameWithGameStates() {
         if (stones.length > 0) {
             if (monkey.isTouching(stones)) {
                 // if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
-                gameState = END;
+                // gameState = END;
+                stones.get(0).x = 30;
+                timesCanStoneTouch -= 1;
             }
         }
 
@@ -171,10 +184,12 @@ function controlGameWithGameStates() {
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 5;
+                score += 2;
+                if (monkey.scale < 1) {
+                    monkey.scale *= 1.05;
+                }
             }
         }
-
     }
 
     // Perform some actions when the player is just seeing the game
@@ -198,14 +213,22 @@ function controlGameWithGameStates() {
         if (monkey.y < 317) {
             monkey.changeAnimation("monkey", monkeyImage);
         }
-        if (stones.length > 0 && monkey.isTouching(stones)) {
-            gameState = END;
+        if (stones.length > 0) {
+            if (monkey.isTouching(stones)) {
+                // if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
+                // gameState = END;
+                stones.get(0).x = 30;
+                timesCanStoneTouch -= 1;
+            }
         }
 
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 5;
+                score += 2;
+                if (monkey.scale < 1) {
+                    monkey.scale *= 1.05;
+                }
             }
         }
 
@@ -304,7 +327,7 @@ function doSetup() {
     reset.visible = false;
 
     monkey = createSprite(100, 180);
-    monkey.scale = 0.1;
+    monkey.scale = 0.075;
     monkey.addAnimation("monkey", monkeyImage);
     monkey.addImage("monkey-jumping", monkeyJumpingImage);
 
