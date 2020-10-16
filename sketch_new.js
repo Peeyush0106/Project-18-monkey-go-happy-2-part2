@@ -137,7 +137,7 @@ function controlGameWithGameStates() {
         forest.setVelocity(-1 * ((3 + time / 50)), 0);
         if (keyDown("space") || keyDown("up")) {
             if (monkey.y > 320) {
-                monkey.velocityY -= 11.3;
+                monkey.velocityY -= 14;
             }
         }
         else {
@@ -210,11 +210,11 @@ function controlGameWithGameStates() {
         }
 
         if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 320) {
-            monkey.velocityY = -11.3;
+            monkey.velocityY = -14;
         }
 
         if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 320) {
-            monkey.velocityY = -11.3;
+            monkey.velocityY = -14;
         }
 
         if (monkey.y < 317/* || forest.velocityX === 0*/) {
@@ -273,7 +273,7 @@ function setPropertiesOfObjects() {
     stones.collide(ground);
     bananas.collide(ground);
     monkey.velocityY += 0.8;
-    if (forest.x < 100) {
+    if (forest.x < - 100) {
         forest.x = 300;
     }
 
