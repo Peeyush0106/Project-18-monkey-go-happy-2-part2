@@ -61,11 +61,13 @@ function draw() {
 
     monkeyHand.scale = monkey.scale;
 
+    console.log("Monkey.y - "+monkey.y);
     drawSprites();
     controlGameWithGameStates();
 }
 function controlGameWithGameStates() {
-    if (gameState === "notStarted") {
+    //console.log("Game state -- "+gameState);
+    if (gameState === "notStarted") {        
         waitageTime += 1;
         ground.velocityX = 0;
         textSize(20);
@@ -117,7 +119,7 @@ function controlGameWithGameStates() {
         forest.setVelocity(-1 * ((3 + time / 50)), 0);
 
         if (keyDown("space") || keyDown("up")) {
-            if (monkey.y > 320) {
+            if (monkey.y > 315) {
                 monkey.velocityY -= 14;
             }
         }
@@ -133,8 +135,7 @@ function controlGameWithGameStates() {
             }
         }
 
-
-        if (monkey.y < 317) {
+        if (monkey.y < 310) {
             monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
             monkeyHand.visible = true;
             monkeyHand.rotationSpeed = 16;
@@ -172,7 +173,7 @@ function controlGameWithGameStates() {
 
         time += Math.round((World.frameRate / 30));
 
-        if (monkey.y < 317) {
+        if (monkey.y < 310) {
             monkey.changeAnimation("monkey", monkeyImage);
         }
 
@@ -196,17 +197,17 @@ function controlGameWithGameStates() {
         }
 
 
-        if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 320) {
+        if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 315) {
             monkey.velocityY = -14;
         }
 
 
-        if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 320) {
+        if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 315) {
             monkey.velocityY = -14;
         }
 
 
-        if (monkey.y < 317/* || forest.velocityX === 0*/) {
+        if (monkey.y < 310/* || forest.velocityX === 0*/) {
             monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
             monkeyHand.visible = true;
             monkeyHand.rotationSpeed = 16;
@@ -231,8 +232,9 @@ function controlGameWithGameStates() {
         reset.visible = true;
         reset.addImage("reset", resetImage);
 
-        if (mousePressedOver(reset)) {
+        if (mousePressedOver(reset)) {            
             gameState = "notStarted";
+            timesCanStoneTouch = 2;
             monkey.rotation = 0;
         }
     }
