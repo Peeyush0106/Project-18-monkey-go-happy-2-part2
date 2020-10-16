@@ -2,7 +2,7 @@ var ground, monkeyHand, reset,
     monkey, monkeyAutomatedCollider, gameState,
     monkeyAutomatedColliderMonkeyXAddNumber,
     waitageTime, score, time, PLAY, END, stones, bananas,
-    singlePlayerButton, automatedPlayingButton, forest;
+    singlePlayerButton, automatedPlayingButton, forest, timesCanStoneTouch;
 
 var groundImage, monkeyHandImage, resetImage, monkeyImage, singlePlayerButtonImage, automatedPlayerButtonImage, bananaImage, stoneImage, monkeyJumpingImage, forestImage;
 
@@ -283,6 +283,8 @@ function doSetup() {
     ground = createSprite(200, 200, 400, 50);
     ground.y = (400 - (ground.height / 2));
     ground.visible = false;
+
+    timesCanStoneTouch = 2;
 
     forestImage.width = 800;
     // forestImage.height = 400;
