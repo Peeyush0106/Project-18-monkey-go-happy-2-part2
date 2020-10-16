@@ -4,7 +4,7 @@ var ground, monkeyHand, reset,
     waitageTime, score, time, PLAY, END, stones, bananas,
     singlePlayerButton, automatedPlayingButton, forest;
 
-var groundImage, monkeyHandImage, resetImage, monkeyImage, singlePlayerButtonImage, automatedPlayerButtonImage, bananaImage, stoneImage, monkeyJumpImage, forestImage;
+var groundImage, monkeyHandImage, resetImage, monkeyImage, singlePlayerButtonImage, automatedPlayerButtonImage, bananaImage, stoneImage, monkeyJumpingImage, forestImage;
 
 function preload() {
     groundImage = loadImage("ground.png");
@@ -15,7 +15,7 @@ function preload() {
     automatedPlayerButtonImage = loadImage("automated_gaming_mode.png");
     bananaImage = loadImage("banana.png");
     stoneImage = loadImage("stone.png");
-    monkeyJumpImage = loadImage("monkey_jump.png");
+    monkeyJumpingImage = loadImage("monkey-jumping.png");
     forestImage = loadImage("jungle.jpg");
 }
 
@@ -34,21 +34,21 @@ function draw() {
     //     console.log("----------------Stone X-------------: " + stones.get(0).x);
     // }
 
-    if (bananas.length > 0) {
-        console.log("----------Bananas------------" + bananas.get(0).x);
-        console.log("----------Bananas Velocity------------" + bananas.get(0).velocityX);
-    }
-    if (stones.length > 0) {
-        console.log("----------Stones------------" + stones.get(0).x);
-        console.log("----------Stones Velocity------------" + stones.get(0).velocityX);
-    }
+    // if (bananas.length > 0) {
+    //     console.log("----------Bananas------------" + bananas.get(0).x);
+    //     console.log("----------Bananas Velocity------------" + bananas.get(0).velocityX);
+    // }
+    // if (stones.length > 0) {
+    //     console.log("----------Stones------------" + stones.get(0).x);
+    //     console.log("----------Stones Velocity------------" + stones.get(0).velocityX);
+    // }
 
     var velocityX = (forest.velocityX * 5) / 8;
-    console.log("VelocityX -- "+velocityX)
-    if(stones.length > 0) {        
+    // console.log("VelocityX -- " + velocityX)
+    if (stones.length > 0) {
         stones.get(0).velocityX = velocityX;
     }
-    if(bananas.length > 0) {
+    if (bananas.length > 0) {
         bananas.get(0).velocityX = velocityX;
     }
     monkeyHand.setCollider("rectangle", 0, 0, 20, 25, monkeyHand.rotation);
@@ -67,8 +67,6 @@ function draw() {
         forest.x = 400;
     }
 
-    spawnBananas();
-    spawnStones();
     // Draw the sprites
     drawSprites();
 
@@ -91,8 +89,8 @@ function controlGameWithGameStates() {
             + ' Else, if you are, enjoy watching!', 5, 290, 395);
         textSize(18);
         // fill("black");
-        text("Play with", 85, 195, 180, 235);
-        text("Controlling", 85, 220, 180, 235);
+        text("Play with", 60, 195, 180, 235);
+        text("Controlling", 60, 220, 180, 235);
         textSize(14);
         text("Enter Automated ", 232.5, 205);
         text("Gaming mode", 232.5, 230);
@@ -124,137 +122,135 @@ function controlGameWithGameStates() {
         text("Score: " + score, 100, 120);
     }
 
-    if (true) {
-
-
-        //When the player wants to control the game himself
-        if (gameState === PLAY[0]) {
-            //Set some properties
-            time += Math.round((World.frameRate / 30));
-            monkey.visible = true;
-            monkeyHand.visible = true;
-            singlePlayerButton.visible = false;
-            automatedPlayingButton.visible = false;
-            // Spawn the objects
-            spawnStones();
-            spawnBananas();
-            // forest.setVelocity(-1 * ((3 + 2 * time / 50)), 0);
-            forest.setVelocity(-1 * ((3 + time / 50)), 0);
-            if (keyDown("space") || keyDown("up")) {
-                if (monkey.y > 320) {
-                    monkey.velocityY -= 11.3;
-                }
+    //When the player wants to control the game himself
+    if (gameState === PLAY[0]) {
+        //Set some properties
+        time += Math.round((World.frameRate / 30));
+        monkey.visible = true;
+        monkeyHand.visible = true;
+        singlePlayerButton.visible = false;
+        automatedPlayingButton.visible = false;
+        // Spawn the objects
+        spawnStones();
+        spawnBananas();
+        // forest.setVelocity(-1 * ((3 + 2 * time / 50)), 0);
+        forest.setVelocity(-1 * ((3 + time / 50)), 0);
+        if (keyDown("space") || keyDown("up")) {
+            if (monkey.y > 320) {
+                monkey.velocityY -= 11.3;
             }
-            else {
-                monkey.changeAnimation("monkey", monkeyImage);
-            }
-
-            if (stones.length > 0) {
-                //  if (monkey.overlap(stones)) {
-                if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
-                    gameState = END;
-                }
-            }
-
-            if (monkey.y < 317/* || forest.velocityX === 0*/) {
-                // monkey.changeAnimation("monkey_jump", monkeyJumpImage);
-                monkey.addImage("monkey_jump", monkeyJumpImage);
-                monkeyHand.visible = true;
-                monkeyHand.rotationSpeed = 16;
-            } else {
-                monkey.changeAnimation("monkey", monkeyImage);
-                monkeyHand.visible = false;
-            }
-            if (keyWentDown("space") || keyWentDown("up")) {
-                monkeyHand.pointTo(190, 390);
-            }
-
-            if (forest.velocityX === 0) {
-                bananas.setVelocityYEach(0);
-            }
-
-            if (bananas.length > 0) {
-                if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
-                    bananas.destroyEach();
-                    score += 5;
-                }
-            }
-
+        }
+        else {
+            monkey.changeAnimation("monkey", monkeyImage);
         }
 
-        // Perform some actions when the player is just seeing the game
-        if (gameState === PLAY[1]) {
-            // Automated gaming mode has been entered
-            monkey.visible = true;
-            monkeyHand.visible = true;
-            singlePlayerButton.visible = false;
-            automatedPlayingButton.visible = false;
-            forest.setVelocity(-1 * ((3 + 2 * time / 50)), 0);
-
-            // Spawn the objects
-            spawnStones();
-            spawnBananas();
-            time += Math.round((World.frameRate / 30));
-
-            // Check for the conditions and perform the actions
-            if (forest.velocityX === 0) {
-                monkey.changeAnimation("monkey_jump", monkeyJumpImage);
-            }
-            if (monkey.y < 317) {
-                monkey.changeAnimation("monkey", monkeyImage);
-            }
-            if (stones.length > 0 && monkey.isTouching(stones)) {
+        if (stones.length > 0) {
+            if (monkey.isTouching(stones)) {
+                // if (((stones.get(0).x) - monkey.x) < (monkey.width + stones.width) / 2) {
                 gameState = END;
             }
-
-            if (bananas.length > 0) {
-                if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
-                    bananas.destroyEach();
-                    score += 5;
-                }
-            }
-
-            if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 320) {
-                monkey.velocityY = -11.3;
-            }
-
-            if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 320) {
-                monkey.velocityY = -11.3;
-            }
-
-            if (monkey.y < 317 || forest.velocityX === 0) {
-                monkey.changeAnimation("monkey_jump", monkeyJumpImage);
-                monkeyHand.visible = true;
-                monkeyHand.rotationSpeed = 16;
-            }
-            else {
-                monkey.changeAnimation("monkey", monkeyImage);
-                monkeyHand.visible = false;
-            }
-
         }
 
-        // When the game has been ended, perform the following actions
-        if (gameState === END) {
-            //Player lost!
-            monkey.changeAnimation("monkey_jump", monkeyJumpImage);
-            monkey.rotation = -120;
-            monkey.y += 0.4;
+        if (monkey.y < 317/* || forest.velocityX === 0*/) {
+            // monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
+            monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
             monkeyHand.visible = true;
-            monkeyHand.rotationSpeed = 0;
-            forest.velocityX = 0;
-            stones.setVelocityXEach(-14);
-            bananas.setVelocityXEach(-8);
-            text("Game Over! Don't you want to play again?" +
-                "                                  :D", 15, 195, 385);
-            reset.visible = true;
-            reset.addImage("reset", resetImage);
-            if (mousePressedOver(reset)) {
-                gameState = "notStarted";
-                monkey.rotation = 0;
+            monkeyHand.rotationSpeed = 16;
+        } else {
+            monkey.changeAnimation("monkey", monkeyImage);
+            monkeyHand.visible = false;
+        }
+        if (keyWentDown("space") || keyWentDown("up")) {
+            monkeyHand.pointTo(190, 390);
+        }
+
+        // if (forest.velocityX === 0) {
+        //     bananas.setVelocityYEach(0);
+        // }
+
+        if (bananas.length > 0) {
+            if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
+                bananas.destroyEach();
+                score += 5;
             }
+        }
+
+    }
+
+    // Perform some actions when the player is just seeing the game
+    if (gameState === PLAY[1]) {
+        // Automated gaming mode has been entered
+        monkey.visible = true;
+        monkeyHand.visible = true;
+        singlePlayerButton.visible = false;
+        automatedPlayingButton.visible = false;
+        forest.setVelocity(-1 * ((3 + 2 * time / 50)), 0);
+
+        // Spawn the objects
+        spawnStones();
+        spawnBananas();
+        time += Math.round((World.frameRate / 30));
+
+        // Check for the conditions and perform the actions
+        // if (forest.velocityX === 0) {
+        //     monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
+        // }
+        if (monkey.y < 317) {
+            monkey.changeAnimation("monkey", monkeyImage);
+        }
+        if (stones.length > 0 && monkey.isTouching(stones)) {
+            gameState = END;
+        }
+
+        if (bananas.length > 0) {
+            if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
+                bananas.destroyEach();
+                score += 5;
+            }
+        }
+
+        if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 320) {
+            monkey.velocityY = -11.3;
+        }
+
+        if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 320) {
+            monkey.velocityY = -11.3;
+        }
+
+        if (monkey.y < 317/* || forest.velocityX === 0*/) {
+            monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
+            monkeyHand.visible = true;
+            monkeyHand.rotationSpeed = 16;
+        }
+        else {
+            monkey.changeAnimation("monkey", monkeyImage);
+            monkeyHand.visible = false;
+        }
+
+    }
+
+    // When the game has been ended, perform the following actions
+    if (gameState === END) {
+        //Player lost!
+        monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
+        monkey.rotation = -120;
+        monkey.y += 0.4;
+        monkeyHand.x -= monkey.x;
+        monkeyHand.visible = true;
+        monkeyHand.rotationSpeed = 0;
+        forest.velocityX = 0;
+        stones.setVelocityXEach(-14);
+        bananas.setVelocityXEach(-8);
+        text("Game Over! Don't you want to play again?" +
+            "                                  :D", 15, 195, 385);
+        reset.visible = true;
+        reset.addImage("reset", resetImage);
+        if (mousePressedOver(reset)) {
+            gameState = "notStarted";
+            monkey.rotation = 0;
         }
     }
+
 }
 
 function setPropertiesOfObjects() {
@@ -289,7 +285,8 @@ function doSetup() {
     ground.visible = false;
 
     forestImage.width = 800;
-    forestImage.height = 400;
+    // forestImage.height = 400;
+    forestImage.scale = 0.5;
     forest = createSprite(200, 200);
     forest.addImage("forest", forestImage);
     forest.width = 800;
@@ -307,6 +304,7 @@ function doSetup() {
     monkey = createSprite(100, 180);
     monkey.scale = 0.1;
     monkey.addAnimation("monkey", monkeyImage);
+    monkey.addImage("monkey-jumping", monkeyJumpingImage);
 
     monkeyAutomatedCollider = createSprite(0, 0, 65, 305);
     monkeyAutomatedCollider.visible = false;
@@ -343,7 +341,7 @@ function doSetup() {
 function spawnBananas() {
     if (World.frameCount % 110 === 0) {
         //Spawn the bananas when the condition is true
-        console.log("Creating New Banana");
+        // console.log("Creating New Banana");
         bananas.destroyEach();
         bananas.clear();
         var bananaY = random(190, 290);
@@ -360,7 +358,7 @@ function spawnBananas() {
 function spawnStones() {
     if (World.frameCount % 180 === 0) {
         //Spawn the stones when the condition is true
-        console.log("Creating New Stone");
+        // console.log("Creating New Stone");
         stones.destroyEach();
         stones.clear();
         var stone = createSprite(500, 200);
