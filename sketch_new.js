@@ -3,7 +3,7 @@ var ground, monkeyHand, reset,
     monkeyAutomatedColliderMonkeyXAddNumber,
     waitageTime, score, time, PLAY, END, stones, bananas,
     singlePlayerButton, automatedPlayingButton, forest,
-    timesCanStoneTouch, bananaSpawnTime, stoneSpawnTime;
+    timesCanStoneTouch;
 
 var groundImage, monkeyHandImage, resetImage, monkeyImage, singlePlayerButtonImage, automatedPlayerButtonImage, bananaImage, stoneImage, monkeyJumpingImage, forestImage;
 
@@ -21,7 +21,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(400, 400);
+    createCanvas(800, 600);
     doSetup();
 }
 
@@ -34,14 +34,19 @@ function doDrawWork() {
     textStyle(BOLD);
     background("lightgreen");
     logConsoles();
+    monkeyHand.x = monkey.x + 10;
+    monkeyHand.y = monkey.y - 5;
     drawSprites();
     controlGameWithGameStates();
+    text("Mouse X: " + mouseX, 400, 250);
+    text("Mouse Y: " + mouseY, 400, 350);
 }
 
 function logConsoles() {
+    console.log("------Monkey scale---------" + monkey.scale);
     // console.log("Monkey: " + monkey);
-    console.log("Monky X: " + monkey.x);
-    console.log("Monkey Y: " + monkey.x);
+    // console.log("Monky X: " + monkey.x);
+    // console.log("Monkey Y: " + monkey.x);
     // console.log("Monkey.y - " + monkey.y);
     // console.log("-------------Stones' Length---------------" + stones.length);
     if (stones.length > 0) {
@@ -63,6 +68,10 @@ function logConsoles() {
 
 function controlGameWithGameStates() {
     //console.log("Game state -- "+gameState);
+    if(score < 0){
+        gameState = END;
+    }
+
     if (gameState === "notStarted") {
         waitageTime += 1;
         ground.velocityX = 0;
@@ -70,15 +79,14 @@ function controlGameWithGameStates() {
         text('Press these buttons to start playing, control the monkey with'
             + ' the arrow keys and spacebar if you are not in '
             + 'automated gaimng mode.'
-            + ' Else, if you are, enjoy watching!', 5, 290, 395);
+            + ' Else, if you are, enjoy watching!', 5, 290, 795);
         textSize(18);
-        text("Play with", 60, 195, 180, 235);
-        text("Controlling", 60, 220, 180, 235);
+        text("Play with", 260, 195, 380, 235);
+        text("Controlling", 260, 220, 380, 235);
         textSize(14);
-        text("Enter Automated ", 232.5, 205);
-        text("Gaming mode", 232.5, 230);
+        text("Enter Automated ", 432.5, 205);
+        text("Gaming mode", 432.5, 230);
         monkey.visible = false;
-        monkey.scale = 0.075;
         timesCanStoneTouch = 2;
         monkeyHand.visible = false;
         singlePlayerButton.visible = true;
@@ -96,13 +104,11 @@ function controlGameWithGameStates() {
     }
     if (gameState != "notStarted") {
         textSize(23);
-        text("Survival Time: " + time, 100, 50);
-        text("Score: " + score, 100, 120);
-        text("Times you can touch the stones: " + timesCanStoneTouch, 10, 85);
+        text("Survival Time: " + time, 300, 50);
+        text("Score: " + score, 300, 120);
+        text("Times you can touch the stones: " + timesCanStoneTouch, 190, 85);
         // text("MouseX: " + mouseX, 250, 170);
         // text("MouseY:  " + mouseY, 250, 230);
-        // text("Banana: " + bananaSpawnTime, 50, 170);
-        // text("Stone: " + stoneSpawnTime, 50, 230);
     }
     if (gameState === PLAY[0]) {
         time += Math.round((World.frameRate / 30));
@@ -118,8 +124,8 @@ function controlGameWithGameStates() {
         forest.setVelocity(-1 * ((1 + time / 70)), 0);
 
         if (keyDown("space") || keyDown("up")) {
-            if (monkey.y > 312) {
-                monkey.velocityY = -14;
+            if (monkey.y > 480) {
+                monkey.velocityY = -16;
             }
         }
         else {
@@ -131,11 +137,12 @@ function controlGameWithGameStates() {
             if (monkey.isTouching(stones)) {
                 stones.get(0).x = 30;
                 timesCanStoneTouch -= 1;
-                monkey.scale = 0.075;
+                monkey.scale = 0.14;
+                score -= 20;
             }
         }
 
-        if (monkey.y < 312) {
+        if (monkey.y < 480) {
             monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
             monkeyHand.visible = true;
             monkeyHand.rotationSpeed = 16;
@@ -154,8 +161,19 @@ function controlGameWithGameStates() {
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 2;
-                if (monkey.scale < 0.1) {
+                score += 5;
+                // switch (score) {
+                //     case 10: monkey.scale = 0.14;
+                //         break;
+                //     case 20: monkey.scale = 0.145;
+                //         break;
+                //     case 30: monkey.scale = 0.15;
+                //         break;
+                //     case 40: monkey.scale = 0.155;
+                //         break;
+                //     default: break;
+                // }
+                if (monkey.scale < 1.55 && score % 10 === 0) {
                     monkey.scale *= 1.05;
                 }
             }
@@ -174,7 +192,7 @@ function controlGameWithGameStates() {
 
         time += Math.round((World.frameRate / 30));
 
-        if (monkey.y < 312) {
+        if (monkey.y < 480) {
             monkey.changeAnimation("monkey", monkeyImage);
         }
 
@@ -183,7 +201,8 @@ function controlGameWithGameStates() {
             if (monkey.isTouching(stones)) {
                 stones.get(0).x = 30;
                 timesCanStoneTouch -= 1;
-                monkey.scale = 0.075;
+                monkey.scale = 0.14;
+                score -= 20;
             }
         }
 
@@ -191,25 +210,36 @@ function controlGameWithGameStates() {
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 2;
-                if (monkey.scale < 0.1) {
+                score += 5;
+                // switch (score) {
+                //     case 10: monkey.scale = 0.14;
+                //         break;
+                //     case 20: monkey.scale = 0.145;
+                //         break;
+                //     case 30: monkey.scale = 0.15;
+                //         break;
+                //     case 40: monkey.scale = 0.155;
+                //         break;
+                //     default: break;
+                // }
+                if (monkey.scale < 1.55 && score % 10 === 0) {
                     monkey.scale *= 1.05;
                 }
             }
         }
 
 
-        if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 312) {
-            monkey.velocityY = -14;
+        if (stones.length > 0 && monkeyAutomatedCollider.isTouching(stones) && monkey.y > 480) {
+            monkey.velocityY = -16;
         }
 
 
-        if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 312) {
-            monkey.velocityY = -14;
+        if (bananas.length > 0 && monkeyAutomatedCollider.isTouching(bananas) && monkey.y > 480) {
+            monkey.velocityY = -16;
         }
 
 
-        if (monkey.y < 312/* || forest.velocityX === 0*/) {
+        if (monkey.y < 480/* || forest.velocityX === 0*/) {
             monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
             monkeyHand.visible = true;
             monkeyHand.rotationSpeed = 16;
@@ -223,7 +253,7 @@ function controlGameWithGameStates() {
         monkey.changeAnimation("monkey-jumping", monkeyJumpingImage);
         monkey.rotation = -120;
         monkey.x = 100;
-        monkey.y = 300;
+        monkey.y = 500;
         // monkey.y += 0.4;
         monkeyHand.x = monkey.x;
         monkeyHand.visible = true;
@@ -255,6 +285,7 @@ function setPropertiesOfObjects() {
         + monkeyAutomatedColliderMonkeyXAddNumber;
     monkeyAutomatedCollider.y = monkey.y;
 
+
     if (forest.velocityX <= 0 && forest.velocityX > -23) {
         forest.velocityX = -1 * ((3 + 2 * time / 50));
     }
@@ -264,10 +295,9 @@ function setPropertiesOfObjects() {
 
     monkey.velocityY += 0.8;
 
-    if (forest.x < - 100) {
-        forest.x = 300;
+    if (forest.x < 300) {
+        forest.x = 500;
     }
-
 
     var velocityX = (forest.velocityX * 5) / 8;
 
@@ -278,15 +308,6 @@ function setPropertiesOfObjects() {
     if (bananas.length > 0) {
         bananas.get(0).velocityX = velocityX;
     }
-
-    monkeyHand.setCollider("rectangle", 0, 0, 20, 25, monkeyHand.rotation);
-    monkey.collide(ground);
-    monkeyHand.x = monkey.x + 10;
-    monkeyHand.y = monkey.y - 5;
-    monkeyAutomatedCollider.x = monkey.x
-        + monkeyAutomatedColliderMonkeyXAddNumber;
-    monkeyAutomatedCollider.y = monkey.y;
-
     if (timesCanStoneTouch <= 0) {
         gameState = END;
     }
@@ -294,8 +315,8 @@ function setPropertiesOfObjects() {
     stones.collide(ground);
     bananas.collide(ground);
 
-    if (forest.x < -15) {
-        forest.x = 400;
+    if (forest.x < 250) {
+        forest.x = 500;
     }
 
     monkeyHand.scale = monkey.scale;
@@ -303,38 +324,37 @@ function setPropertiesOfObjects() {
 }
 
 function doSetup() {
-    ground = createSprite(200, 200, 800, 50);
-    ground.y = (400 - (ground.height / 2));
+    ground = createSprite(200, 200, 1200, 50);
+    ground.y = (600 - (ground.height / 2));
     ground.visible = false;
 
     timesCanStoneTouch = 2;
 
-    forestImage.width = 800;
-    forestImage.scale = 0.5;
+    // forestImage.width = 800;
+    // forestImage.scale = 0.5;
 
-    forest = createSprite(200, 200);
+    forest = createSprite(500, 300);
     forest.addImage("forest", forestImage);
     forest.width = 800;
-    forest.height = 400;
+    forest.height = 600;
     forest.depth = -100;
+    // forestImage.height = 400;
+    // forestImage.y = forest.y - 50;
 
     monkeyHand = createSprite();
     monkeyHand.addImage("monkey_hand", monkeyHandImage);
     monkeyHand.scale = 0.1;
     monkeyHand.rotation = 180;
 
-    stoneSpawnTime = 240;
-    bananaSpawnTime = 200;
-
     reset = createSprite(200, 275);
     reset.visible = false;
 
     monkey = createSprite(100, 180);
-    monkey.scale = 0.075;
     monkey.addAnimation("monkey", monkeyImage);
+    monkey.scale = 0.14;
     monkey.addImage("monkey-jumping", monkeyJumpingImage);
 
-    monkeyAutomatedCollider = createSprite(0, 0, 65, 305);
+    monkeyAutomatedCollider = createSprite(0, 0, 65, 800);
     monkeyAutomatedCollider.visible = false;
 
     score = 0;
@@ -346,35 +366,35 @@ function doSetup() {
     stones = createGroup();
     bananas = createGroup();
 
-    singlePlayerButton = createSprite(110, 220);
+    singlePlayerButton = createSprite(310, 220);
     singlePlayerButton.addImage("single_player", singlePlayerButtonImage);
     singlePlayerButton.scale = 2;
 
-    automatedPlayingButton = createSprite(290, 220);
+    automatedPlayingButton = createSprite(490, 220);
     automatedPlayingButton.addImage("automated_gaming_mode", automatedPlayerButtonImage);
     automatedPlayingButton.scale = 2;
 }
 function spawnBananas() {
     // if (World.frameCount % 110 === 0) {
-    if (World.frameCount % bananaSpawnTime === 0) {
+    if (World.frameCount % 200 === 0) {
         // bananas.destroyEach();
         // bananas.clear();
-        var bananaY = random(190, 290);
-        var banana = createSprite(450, bananaY);
+        var bananaY = random(290, 420);
+        var banana = createSprite(850, bananaY);
         banana.addImage("banana", bananaImage);
         banana.scale = 0.05;
         bananas.add(banana);
         banana.velocityY += 0.5;
         monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
-        if (bananaSpawnTime > 120) { bananaSpawnTime -= 10; }
+        // if (bananaSpawnTime > 120) { bananaSpawnTime -= 10; }
     }
 }
 function spawnStones() {
     // if (World.frameCount % 180 === 0) {
-    if (World.frameCount % stoneSpawnTime === 0) {
+    if (World.frameCount % 240 === 0) {
         // stones.destroyEach();
         // stones.clear();
-        var stone = createSprite(500, 200);
+        var stone = createSprite(900, 400);
         stone.addImage("stone", stoneImage);
         stone.scale = 0.1;
         stone.setCollider("circle", 0, 0, 105);
@@ -382,6 +402,6 @@ function spawnStones() {
         stone.velocityY += 10;
         stones.add(stone);
         monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
-        if (stoneSpawnTime > 170) { stoneSpawnTime -= 10; }
+        // if (stoneSpawnTime > 170) { stoneSpawnTime -= 10; }
     }
 }
