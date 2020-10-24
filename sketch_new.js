@@ -36,10 +36,11 @@ function doDrawWork() {
     logConsoles();
     monkeyHand.x = monkey.x + 10;
     monkeyHand.y = monkey.y - 5;
+    monkey.collide(ground);
     drawSprites();
     controlGameWithGameStates();
-    text("Mouse X: " + mouseX, 400, 250);
-    text("Mouse Y: " + mouseY, 400, 350);
+    // text("Mouse X: " + mouseX, 400, 250);
+    // text("Mouse Y: " + mouseY, 400, 350);
 }
 
 function logConsoles() {
@@ -161,7 +162,7 @@ function controlGameWithGameStates() {
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 5;
+                score += 2;
                 // switch (score) {
                 //     case 10: monkey.scale = 0.14;
                 //         break;
@@ -173,7 +174,7 @@ function controlGameWithGameStates() {
                 //         break;
                 //     default: break;
                 // }
-                if (monkey.scale < 1.55 && score % 10 === 0) {
+                if (monkey.scale < 1.6 && score % 10 === 0) {
                     monkey.scale *= 1.05;
                 }
             }
@@ -210,7 +211,7 @@ function controlGameWithGameStates() {
         if (bananas.length > 0) {
             if (monkey.isTouching(bananas) || monkeyHand.isTouching(bananas)) {
                 bananas.destroyEach();
-                score += 5;
+                score += 2;
                 // switch (score) {
                 //     case 10: monkey.scale = 0.14;
                 //         break;
@@ -222,7 +223,7 @@ function controlGameWithGameStates() {
                 //         break;
                 //     default: break;
                 // }
-                if (monkey.scale < 1.55 && score % 10 === 0) {
+                if (monkey.scale < 1.6 && score % 10 === 0) {
                     monkey.scale *= 1.05;
                 }
             }
@@ -271,6 +272,7 @@ function controlGameWithGameStates() {
         if (mousePressedOver(reset)) {
             gameState = "notStarted";
             timesCanStoneTouch = 2;
+            score = 0;
             monkey.rotation = 0;
         }
     }
@@ -324,7 +326,7 @@ function setPropertiesOfObjects() {
 }
 
 function doSetup() {
-    ground = createSprite(200, 200, 1200, 50);
+    ground = createSprite(400, 200, 2000, 50);
     ground.y = (600 - (ground.height / 2));
     ground.visible = false;
 
@@ -385,7 +387,7 @@ function spawnBananas() {
         banana.scale = 0.05;
         bananas.add(banana);
         banana.velocityY += 0.5;
-        monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
+        monkeyAutomatedColliderMonkeyXAddNumber = random(100, 130);
         // if (bananaSpawnTime > 120) { bananaSpawnTime -= 10; }
     }
 }
@@ -401,7 +403,7 @@ function spawnStones() {
         stone.rotationSpeed = forest.velocityX * 5 / 3;
         stone.velocityY += 10;
         stones.add(stone);
-        monkeyAutomatedColliderMonkeyXAddNumber = random(70, 90);
+        monkeyAutomatedColliderMonkeyXAddNumber = random(100, 130);
         // if (stoneSpawnTime > 170) { stoneSpawnTime -= 10; }
     }
 }
